@@ -67,6 +67,8 @@ def play_quiz(game):
 def add_quiz(game):
     question = read_required("문제: ")
     choices = [read_required(f"선택지 {number}: ") for number in range(1, 5)]
+    print("안내: 주제는 Python, JSON, Git, GitHub 중에서 입력해 주세요.")
+    print("중복 문제 확인과 기존 문제 수정·삭제는 지원하지 않습니다.")
     topic = read_required("주제 (Python/JSON/Git/GitHub): ")
     draft = Quiz(question, choices, 1, topic)
 
