@@ -11,13 +11,13 @@ Python, JSON, Git, GitHub의 기초 개념과 명령어를 사지선다형으로
 Python 3.10 이상에서 프로젝트 폴더로 이동한 뒤 실행합니다. 기본 실행은 대시보드입니다.
 
 ```powershell
-py -3.13 main.py
+py -3 main.py
 ```
 
 콘솔 모드는 다음과 같이 실행합니다.
 
 ```powershell
-py -3.13 main.py --cli
+py -3 main.py --cli
 ```
 
 ## 기능
