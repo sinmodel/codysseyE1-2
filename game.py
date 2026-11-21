@@ -161,9 +161,17 @@ class QuizGame:
             print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가해 주세요.")
             return
 
-        maximum = len(self.quizzes)
+        topics = list(dict.fromkeys(quiz.topic for quiz in self.quizzes))
+        print("\n주제를 선택해 주세요.")
+        for topic_number, topic in enumerate(topics, start=1):
+            print(f"{topic_number}. {topic}")
+        selected_topic_number = self._read_number("주제 번호: ", 1, len(topics))
+        selected_topic = topics[selected_topic_number - 1]
+        topic_quizzes = [quiz for quiz in self.quizzes if quiz.topic == selected_topic]
+
+        maximum = len(topic_quizzes)
         question_count = self._read_number(f"몇 문제를 풀까요? (1-{maximum}): ", 1, maximum)
-        selected_quizzes = random.sample(self.quizzes, question_count)
+        selected_quizzes = random.sample(topic_quizzes, question_count)
         correct_count = 0
 
         for question_number, quiz in enumerate(selected_quizzes, start=1):
