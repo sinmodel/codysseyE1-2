@@ -1,5 +1,5 @@
 class Quiz:
-    def __init__(self, question, choices, answer, topic="Python"):
+    def __init__(self, question, choices, answer, topic="Python", explanation=""):
         if not isinstance(question, str) or not question.strip():
             raise ValueError("문제 내용은 비어 있을 수 없습니다.")
         if not isinstance(choices, list) or len(choices) != 4:
@@ -10,11 +10,14 @@ class Quiz:
             raise ValueError("정답 번호는 1부터 4 사이여야 합니다.")
         if not isinstance(topic, str) or not topic.strip():
             raise ValueError("주제 이름은 비어 있을 수 없습니다.")
+        if not isinstance(explanation, str):
+            raise ValueError("퀴즈 해설은 문자열이어야 합니다.")
 
         self.question = question.strip()
         self.choices = [choice.strip() for choice in choices]
         self.answer = answer
         self.topic = topic.strip()
+        self.explanation = explanation.strip()
 
     def get_answer_number(self, response):
         answer_text = str(response).strip()
@@ -47,6 +50,7 @@ class Quiz:
             "choices": self.choices,
             "answer": self.answer,
             "topic": self.topic,
+            "explanation": self.explanation,
         }
 
     @classmethod
@@ -56,6 +60,7 @@ class Quiz:
             choices=data["choices"],
             answer=data["answer"],
             topic=data.get("topic", "Python"),
+            explanation=data.get("explanation", ""),
         )
 
 
@@ -122,4 +127,19 @@ DEFAULT_QUIZZES = [
     Quiz("GitHub 웹사이트에서 README.md를 열면 보통 어떻게 표시되나요?", ["Markdown 서식이 적용된 문서", "Python 프로그램 실행 화면", "편집 불가능한 이미지", "JSON 데이터베이스"], 1, "GitHub"),
     Quiz("팀원이 만든 변경사항을 내 로컬 브랜치에 가져와 반영할 때 쓰는 명령은 무엇인가요?", ["git pull", "git init", "git add", "git status"], 1, "GitHub"),
     Quiz("GitHub 저장소에서 Issue를 열어 작업을 논의하는 좋은 이유는 무엇인가요?", ["논의와 진행 상황을 한곳에서 추적", "모든 커밋을 지우기", "로컬 브랜치를 자동 삭제", "Python을 관리자 권한으로 실행"], 1, "GitHub"),
+    Quiz("원격 저장소의 전체 프로젝트 파일과 이력을 내 컴퓨터에 처음으로 통째로 복제해 올 때 사용하는 명령어는?", ["git pull", "git clone", "git fetch", "git push"], 2, "Git", "git clone은 원격 저장소의 전체 내용을 내 컴퓨터에 처음으로 통째로 복제해 오는 명령어입니다."),
+    Quiz("이미 원격 저장소와 연결된 내 프로젝트 폴더에서, 다른 사람이 올린 최신 변경사항을 가져와 내 코드에 즉시 합치는 명령어는?", ["git clone", "git add", "git pull", "git commit"], 3, "Git", "git pull은 원격 저장소의 변경사항을 가져와(fetch) 내 작업 코드에 즉시 합치는(merge) 명령어입니다."),
+    Quiz("git pull과 비교했을 때 git fetch의 가장 큰 특징으로 옳은 것은?", ["내 작업 중인 코드에 변경사항을 즉시 자동으로 병합한다.", "변경사항을 임시 공간으로 가져오기만 하고 내 작업 파일은 건드리지 않는다.", "원격 저장소 전체를 새 폴더에 통째로 복제한다.", "내 컴퓨터의 커밋 기록을 원격 저장소로 업로드한다."], 2, "Git", "git fetch는 원격의 변경 이력을 확인용으로 다운로드만 할 뿐, 내가 작성 중인 파일은 변경하지 않아 안전합니다."),
+    Quiz("내 컴퓨터에서 수정한 코드를 원격 저장소에 올리는 올바른 3단계 순서는?", ["commit → add → push", "push → commit → add", "add → push → commit", "add → commit → push"], 4, "Git", "보낼 파일을 고르고(add), 버전으로 확정 및 포장한 뒤(commit), 원격 서버로 발송(push)합니다."),
+    Quiz("다음 중 작업 폴더에서 수정한 모든 파일을 한꺼번에 대기 공간(Staging Area)에 담는 명령어는?", ["git add .", "git commit .", "git push .", "git status ."], 1, "Git", "git add . 에서 마침표(.)는 현재 폴더 내 변경된 모든 파일을 대기 공간(Staging Area)에 담겠다는 뜻입니다."),
+    Quiz("대기 공간(Staging Area)에 올려둔 파일들을 하나의 버전으로 확정하며 작업 설명(메모)을 남기는 명령어는?", ["git push -m \"메모\"", "git add -m \"메모\"", "git commit -m \"메모\"", "git pull -m \"메모\""], 3, "Git", "git commit -m \"메모\"는 대기 공간의 파일들을 내 컴퓨터 로컬 저장소에 영구 기록하는 명령어입니다."),
+    Quiz("다음 명령어 중 반드시 인터넷 연결(원격 저장소와의 통신)이 필요한 것은?", ["git add", "git commit", "git push", "git restore --staged"], 3, "Git", "add와 commit은 내 컴퓨터 내부에서 처리되므로 오프라인에서도 가능하지만, push는 원격 서버와 통신해야 합니다."),
+    Quiz("실수로 git add . 를 실행했을 때, 작성한 코드는 그대로 두고 대기 공간(Staging Area)에서만 내리는 명령어는?", ["git restore --staged .", "git reset --hard HEAD~1", "git merge --abort", "git commit --amend"], 1, "Git", "git restore --staged . 는 작성한 코드는 그대로 보존하면서 대기 공간(Staging Area)에서만 파일을 내려놓습니다."),
+    Quiz("방금 실행한 git commit의 '커밋 메시지(메모)'에 오타가 나서 메시지만 간단히 수정하고 싶을 때 사용하는 명령어는?", ["git reset --hard HEAD~1", "git commit --amend -m \"새 메시지\"", "git pull --amend", "git restore --staged"], 2, "Git", "git commit --amend 옵션을 사용하면 직전에 만든 커밋의 메시지를 새 메시지로 덮어씌워 수정할 수 있습니다."),
+    Quiz("git reset --hard HEAD~1 명령어를 실행했을 때 발생하는 결과로 옳은 것은?", ["커밋만 취소되고 작성한 코드와 add 상태는 모두 유지된다.", "커밋과 add는 취소되지만 작성한 코드 내용은 안전하게 남는다.", "방금 커밋한 기록은 물론 내가 작성한 코드까지 모두 삭제된다.", "원격 저장소에 올라간 커밋만 안전하게 취소된다."], 3, "Git", "--hard 옵션은 커밋 기록과 함께 내가 작성한 코드 수정 내역까지 모두 삭제하므로 주의해서 사용해야 합니다."),
+    Quiz("git pull을 실행할 때 코드 충돌(Conflict)이 발생하는 가장 대표적인 원인은?", ["인터넷 속도가 느릴 때", "서로 다른 파일의 다른 줄을 수정했을 때", "같은 파일의 정확히 같은 줄을 서로 다르게 수정했을 때", "git add를 두 번 연속 실행했을 때"], 3, "Git", "같은 파일의 같은 줄을 서로 다르게 수정했을 때 Git이 자동으로 합치지 못하고 사용자에게 선택을 맡깁니다."),
+    Quiz("충돌(Conflict)이 발생한 파일을 열었을 때, '내가 내 컴퓨터에서 작성한 코드' 영역을 나타내는 표시 구간은?", ["<<<<<<< HEAD 와 ======= 사이", "======= 와 >>>>>>> 사이", ">>>>>>> 와 끝부분 사이", "파일의 맨 첫 줄"], 1, "Git", "<<<<<<< HEAD와 ======= 사이가 내 컴퓨터의 코드이며, 그 아래가 원격 저장소에서 가져온 코드입니다."),
+    Quiz("에디터에서 충돌 코드를 알맞게 정리한 후, 병합을 최종 완료하기 위해 순서대로 실행해야 하는 명령어는?", ["git pull → git clone", "git fetch → git reset", "git add → git commit", "git merge --abort → git push"], 3, "Git", "충돌 기호(<<<, ===, >>>)를 지우고 코드를 정리한 뒤 git add와 git commit을 실행해 병합을 마무리합니다."),
+    Quiz("git pull 도중 충돌이 너무 복잡해서 병합 시도를 취소하고 pull 실행 직전의 깨끗한 상태로 되돌리는 비상 명령어는?", ["git commit --amend", "git merge --abort", "git restore --staged .", "git clone --abort"], 2, "Git", "git merge --abort는 병합 과정에서 발생한 충돌 상태를 취소하고 pull 실행 직전으로 되돌립니다."),
+    Quiz("현재 내 작업 폴더에서 어떤 파일이 수정되었고, 어떤 파일이 add 되었는지 상태를 확인할 때 사용하는 명령어는?", ["git status", "git fetch", "git clone", "git push"], 1, "Git", "git status는 현재 작업 폴더의 변경 상태와 대기 공간(Staging)에 올라간 파일 목록을 보여줍니다."),
 ]

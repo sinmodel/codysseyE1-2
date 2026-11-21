@@ -7,7 +7,7 @@ from pathlib import Path
 from quiz import DEFAULT_QUIZZES, Quiz
 
 
-QUIZ_BANK_VERSION = 1
+QUIZ_BANK_VERSION = 2
 PANEL_WIDTH = 40
 
 
@@ -181,9 +181,13 @@ class QuizGame:
             if quiz.is_correct(response):
                 correct_count += 1
                 print("정답입니다.")
+                if quiz.explanation:
+                    print(f"해설: {quiz.explanation}")
             else:
                 correct_choice = quiz.choices[quiz.answer - 1]
                 print(f"아쉬워요. 정답은 {quiz.answer}. {correct_choice}입니다.")
+                if quiz.explanation:
+                    print(f"해설: {quiz.explanation}")
 
         is_new_best, save_message = self.record_game(correct_count, question_count)
         score = round(correct_count / question_count * 100)
@@ -198,7 +202,8 @@ class QuizGame:
         print("안내: 주제는 Python, JSON, Git, GitHub 중에서 입력해 주세요.")
         print("중복 문제 확인과 기존 문제 수정은 지원하지 않습니다.")
         topic = self._read_required("주제 (Python/JSON/Git/GitHub): ")
-        draft = Quiz(question, choices, 1, topic)
+        explanation = self._read_required("해설: ")
+        draft = Quiz(question, choices, 1, topic, explanation)
 
         while True:
             response = input("정답 번호(예: 4번) 또는 보기 문구: ").strip()
@@ -207,7 +212,7 @@ class QuizGame:
                 break
             print("보기의 번호(1-4, 예: 4번)나 보기 문구를 입력해 주세요.")
 
-        saved, message = self.save_quiz(Quiz(question, choices, answer, topic))
+        saved, message = self.save_quiz(Quiz(question, choices, answer, topic, explanation))
         print("퀴즈를 추가했습니다." if saved else message)
 
     def show_quizzes(self):
