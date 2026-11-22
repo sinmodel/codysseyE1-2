@@ -391,14 +391,22 @@ origin은 원격 저장소 별칭, main은 브랜치 이름입니다.
 다음 명령어를 실행합니다.
 ```
 git log --oneline --graph --decorate --all
+
+git --no-pager log --oneline --graph --decorate --all -n 15
 ```
-묶음	커밋 번호	내용	브랜치
-1	1325f97	Python 퀴즈 프로젝트 초기화	백업
-1	1466ed7	대시보드와 4개 주제 퀴즈 추가	백업
-1	7bb68b2	Python 실행 안내 수정	백업
-2	b1d54ff	퀴즈 작성 제한 안내 추가	백업
-2	0946f7d	version-1.0 프로젝트 파일 반영	main
-2	050ccfc	Git 퀴즈 15개와 해설 추가	main
-3	995e4ef	주제별 퀴즈 선택 기능 추가	feature
-3	b539709	주제별 퀴즈 기능을 main에 병합	main
-3	fabc433	주제 선택 사용법 문서화	main
+프로젝트 관련 커밋 12개 (자동 생성된 세션 기록 제외)
+
+| 묶음 | 커밋 번호 | 내용 | 브랜치 |
+|---|---|---|---|
+| 1 | `1325f97` | Python 퀴즈 프로젝트 초기화 | `backup-before-replacement-20261121` |
+| 1 | `1466ed7` | 대시보드와 4개 주제 퀴즈 추가 | `backup-before-replacement-20261121` |
+| 1 | `7bb68b2` | Python 실행 안내 수정 | `backup-before-replacement-20261121` |
+| 2 | `b1d54ff` | 퀴즈 작성 제한 안내 추가 | `backup-before-replacement-20261121` |
+| 2 | `0946f7d` | version-1.0 프로젝트 파일 반영 | `main` |
+| 2 | `050ccfc` | Git 퀴즈 15개와 해설 추가 | `main` |
+| 3 | `995e4ef` | 주제별 퀴즈 선택 기능 추가 | `feature/topic-based-quiz` |
+| 3 | `b539709` | 주제별 퀴즈 기능을 main에 병합 | `main` |
+| 3 | `fabc433` | 주제 선택 사용법 문서화 | `main` |
+| 4 | `8c73ead` | README 설명 보완 | `main` |
+| 4 | `d2fe63c` | clone/pull 실습 파일 추가 | `main` |
+| 4 | `0b3dab8` | 기본 퀴즈 설명 추가 | `main` |
