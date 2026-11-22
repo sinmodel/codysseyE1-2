@@ -7,7 +7,7 @@ from pathlib import Path
 from quiz import DEFAULT_QUIZZES, Quiz
 
 
-QUIZ_BANK_VERSION = 2
+QUIZ_BANK_VERSION = 3
 PANEL_WIDTH = 40
 
 
@@ -52,7 +52,17 @@ class QuizGame:
             loaded_quizzes = [Quiz.from_dict(item) for item in stored_quizzes]
             stored_bank_version = self._valid_nonnegative_integer(data.get("quiz_bank_version", 0))
             added_defaults = []
+            updated_explanations = 0
             if stored_bank_version < QUIZ_BANK_VERSION:
+                default_quizzes_by_question = {
+                    quiz.question: quiz for quiz in DEFAULT_QUIZZES
+                }
+                for quiz in loaded_quizzes:
+                    default_quiz = default_quizzes_by_question.get(quiz.question)
+                    if default_quiz and not quiz.explanation and default_quiz.explanation:
+                        quiz.explanation = default_quiz.explanation
+                        updated_explanations += 1
+
                 saved_questions = {quiz.question for quiz in loaded_quizzes}
                 added_defaults = [
                     quiz for quiz in DEFAULT_QUIZZES if quiz.question not in saved_questions
@@ -68,9 +78,21 @@ class QuizGame:
             if not isinstance(stored_history, list):
                 raise ValueError("history 항목은 목록이어야 합니다.")
             self.history = stored_history
-            if added_defaults:
-                self.load_message = f"저장된 문제를 보존하고 새 기본 문제 {len(added_defaults)}개를 추가했습니다."
-                self.save_data()
+            if stored_bank_version < QUIZ_BANK_VERSION:
+                if added_defaults and updated_explanations:
+                    self.load_message = (
+                        f"저장된 문제를 보존하고 새 기본 문제 {len(added_defaults)}개를 추가했으며, "
+                        f"{updated_explanations}개의 설명을 보완했습니다."
+                    )
+                elif added_defaults:
+                    self.load_message = f"저장된 문제를 보존하고 새 기본 문제 {len(added_defaults)}개를 추가했습니다."
+                elif updated_explanations:
+                    self.load_message = f"저장된 퀴즈 {len(self.quizzes)}개 중 설명 {updated_explanations}개를 보완했습니다."
+                else:
+                    self.load_message = f"저장된 퀴즈 {len(self.quizzes)}개를 불러왔습니다."
+                saved, message = self.save_data()
+                if not saved:
+                    self.load_message += f" 업데이트 저장에 실패했습니다: {message}"
             else:
                 self.load_message = f"저장된 퀴즈 {len(self.quizzes)}개를 불러왔습니다."
         except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as error:
